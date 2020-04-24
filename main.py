@@ -233,13 +233,11 @@ class Canvas:
         screenx = (self.image_width // 2) - icewidth // 2
         screeny = (self.image_height // 2) - iceheight // 2
         SCALEEEEEEEE = random.randint(100, 160)
-        print(SCALEEEEEEEE)
         for x in range(0, icewidth):
             for y in range(0, iceheight):
                 # good function
                 distance_from_center = math.sqrt(math.pow((x - icewidth//2), 2) + math.pow((y - iceheight//2), 2))
                 if distance_from_center < icewidth // 2:
-                # if 1:
                     noise_val = self.generate_perlin_noise(x=x + icewidth, y=y + iceheight, scale=self.terrain_scale, offset=self.offset) + 0.7
                     sin_x = math.sin(((x / icewidth)) * (math.pi)) * 0.7
                     sin_y = math.sin((y / iceheight) * (math.pi))
@@ -256,23 +254,62 @@ class Canvas:
                     # self.canvas.set_source_rgba(noise_val, noise_val, noise_val, noise_val)
                     # self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
                     # self.canvas.fill()
-
-                    if noise_val > 0.9:
-                        self.canvas.set_source_rgba(255/255, 255/255, 255/255, 1)
+                    if noise_val > 0.99:
+                        self.canvas.set_source_rgba(254/255, 254/255, 254/255, 1)
                         self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
                         self.canvas.fill()
-                    elif noise_val > 0.8:
-                        self.canvas.set_source_rgba(234/255, 238/255, 243/255, 1)
+                    elif noise_val > 0.96:
+                        self.canvas.set_source_rgba(248/255, 254/255, 255/255, 1)
+                        self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
+                        self.canvas.fill()
+                    elif noise_val > 0.93:
+                        self.canvas.set_source_rgba(245/255, 253/255, 254/255, 1)
+                        self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
+                        self.canvas.fill()
+                    elif noise_val > 0.9:
+                        self.canvas.set_source_rgba(240/255, 249/255, 254/255, 1)
+                        self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
+                        self.canvas.fill()
+                    elif noise_val > 0.85:
+                        self.canvas.set_source_rgba(237/255, 245/255, 254/255, 1)
+                        self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
+                        self.canvas.fill()
+                    elif noise_val > 0.81:
+                        self.canvas.set_source_rgba(233/255, 241/255, 249/255, 1)
+                        self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
+                        self.canvas.fill()
+                    elif noise_val > 0.79:
+                        self.canvas.set_source_rgba(228/255, 237/255, 243/255, 1)
+                        self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
+                        self.canvas.fill()
+                    elif noise_val > 0.743:
+                        self.canvas.set_source_rgba(222/255, 231/255, 233/255, 1)
+                        self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
+                        self.canvas.fill()
+                    elif noise_val > 0.72:
+                        self.canvas.set_source_rgba(199/255, 210/255, 217/255, 1)
+                        self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
+                        self.canvas.fill()
+                    elif noise_val > 0.71:
+                        self.canvas.set_source_rgba(189/255, 195/255, 202/255, 1)
                         self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
                         self.canvas.fill()
                     elif noise_val > 0.7:
-                        self.canvas.set_source_rgba(195/255, 201/255, 208/255, 1)
+                        self.canvas.set_source_rgba(150/255, 165/255, 174/255, 1)
                         self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
                         self.canvas.fill()
-                    elif noise_val > 0.65:
-                        self.canvas.set_source_rgba(194/255, 198/255, 201/255, 1)
+                    elif noise_val > 0.696:
+                        self.canvas.set_source_rgba(95/255, 157/255, 152/255, 1)
                         self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
                         self.canvas.fill()
+                    # elif noise_val > 0.68:
+                    #     self.canvas.set_source_rgba(44/255, 103/255, 128/255, 1)
+                    #     self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
+                    #     self.canvas.fill()
+                    # elif noise_val > 0.67:
+                    #     self.canvas.set_source_rgba(28/255, 68/255, 102/255, 1)
+                    #     self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
+                    #     self.canvas.fill()
 
 
     def generate_clouds(self):
@@ -289,7 +326,7 @@ class Canvas:
 if __name__ == "__main__":
     c = Canvas(width=1500, height=1100, border_thickness=50)
     c.draw_background()
-    # c.draw_stars()
+    c.draw_stars()
     c.generate_terrain()
     c.render_ice_caps(10, 10, 200, 200)
     c.generate_clouds()
