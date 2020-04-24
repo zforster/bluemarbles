@@ -43,7 +43,8 @@ class Canvas:
         # 250
         print(self.terrain_scale)
 
-        self.cloud_scale = random.randint(175, 500)
+        self.cloud_scale = random.randint(175, 320)
+
         # 175
         print(self.cloud_scale)
 
@@ -99,15 +100,15 @@ class Canvas:
                                   base=0)
         return noise_val
 
+
     def generate_terrain(self):
         for width in range(0, self.image_width):
             for height in range(0, self.image_height):
+                # good function
                 distance_from_center = math.sqrt(math.pow((width - self.image_width//2), 2) + math.pow((height - self.image_height//2), 2))
                 if distance_from_center < self.planet_radius_pix:
-                    # octaves = sharpness
+                # if 1:
                     noise_val = self.generate_perlin_noise(x=width, y=height, scale=self.terrain_scale, offset=self.offset)
-                    # print(noise_val)
-
                     if noise_val < -0.263:
                         self.canvas.set_source_rgba(8/255, 30/255, 75/255, 1)
                         self.canvas.rectangle(width, height, 1, 1)
@@ -226,6 +227,29 @@ class Canvas:
                         self.canvas.rectangle(width, height, 1, 1)
                         self.canvas.fill()
 
+    def render_ice_caps(self, screenx: int, screeny: int, icewidth: int, iceheight: int):
+        icewidth = self.planet_radius_pix * 2
+        iceheight = self.planet_radius_pix * 2
+        screenx = (self.image_width // 2) - icewidth // 2
+        screeny = (self.image_height // 2) - iceheight // 2
+        for x in range(0, icewidth):
+            for y in range(0, iceheight):
+                # good function
+                distance_from_center = math.sqrt(math.pow((x - icewidth//2), 2) + math.pow((y - iceheight//2), 2))
+                # if distance_from_center < icewidth // 2:
+                if 1:
+                    noise_val = self.generate_perlin_noise(x=x + icewidth, y=y + iceheight, scale=self.terrain_scale, offset=self.offset) + 0.5
+                    sin_x = math.sin(((x / icewidth)) * (math.pi))
+                    sin_y = math.sin((y / iceheight) * (math.pi))
+
+                    sin_val = (1 - sin_y) * sin_x
+                    noise_val = (sin_val * 1) * (noise_val * 2)
+
+                    self.canvas.set_source_rgba(noise_val, noise_val, noise_val, noise_val)
+                    self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
+                    self.canvas.fill()
+
+
     def generate_clouds(self):
         for width in range(0, self.image_width):
             for height in range(0, self.image_height):
@@ -236,44 +260,25 @@ class Canvas:
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
 
-    def generate_ice_caps(self):
-        for width in range(0, self.image_width):
-            for height in range(0, self.image_height):
-                distance_from_center = math.sqrt(math.pow((width - self.image_width//2), 2) + math.pow((height - self.image_height//2), 2))
-                if distance_from_center < self.planet_radius_pix:
-                    # if height is between the start of the planet and the end of the planet
-                    planet_start_height = (self.image_height-(self.planet_radius_pix*2))/2
-                    planet_end_height = self.image_height - planet_start_height
 
-                    if height < planet_start_height + self.planet_radius_pix / 5:
-                        self.draw_ice_cap(width=width, height=height)
-                    if height < planet_end_height and height > planet_end_height - self.planet_radius_pix / 5:
-                        self.draw_ice_cap(width=width, height=height)
-
-    # def gen_circle_gradient(self):
-    #     self.planet_radius_pix
-
-
-    def draw_ice_cap(self, width: int, height: int):
-        noise_val = self.generate_perlin_noise(x=width, y=height, scale=self.terrain_scale, offset=self.offset)
-        if noise_val < 0:
-            self.canvas.set_source_rgba(255/255, 255/255, 255/255, 1)
-            self.canvas.rectangle(width, height, 1, 1)
-            self.canvas.fill()
-        elif noise_val < 0.1:
-            self.canvas.set_source_rgba(234/255, 238/255, 243/255, 1)
-            self.canvas.rectangle(width, height, 1, 1)
-            self.canvas.fill()
-        elif noise_val < 0.2:
-            self.canvas.set_source_rgba(195/255, 201/255, 208/255, 1)
-            self.canvas.rectangle(width, height, 1, 1)
-            self.canvas.fill()
-        elif noise_val < 0.3:
-            self.canvas.set_source_rgba(194/255, 198/255, 201/255, 1)
-            self.canvas.rectangle(width, height, 1, 1)
-            self.canvas.fill()
-
-
+    # def draw_ice_cap(self, width: int, height: int):
+    #     noise_val = self.generate_perlin_noise(x=width, y=height, scale=self.terrain_scale, offset=self.offset)
+    #     if noise_val < 0:
+    #         self.canvas.set_source_rgba(255/255, 255/255, 255/255, 1)
+    #         self.canvas.rectangle(width, height, 1, 1)
+    #         self.canvas.fill()
+    #     elif noise_val < 0.1:
+    #         self.canvas.set_source_rgba(234/255, 238/255, 243/255, 1)
+    #         self.canvas.rectangle(width, height, 1, 1)
+    #         self.canvas.fill()
+    #     elif noise_val < 0.2:
+    #         self.canvas.set_source_rgba(195/255, 201/255, 208/255, 1)
+    #         self.canvas.rectangle(width, height, 1, 1)
+    #         self.canvas.fill()
+    #     else:
+    #         self.canvas.set_source_rgba(194/255, 198/255, 201/255, 1)
+    #         self.canvas.rectangle(width, height, 1, 1)
+    #         self.canvas.fill()
 
 
 if __name__ == "__main__":
@@ -281,7 +286,7 @@ if __name__ == "__main__":
     c.draw_background()
     # c.draw_stars()
     c.generate_terrain()
-    c.generate_ice_caps()
-    c.generate_clouds()
-    c.draw_border()
+    c.render_ice_caps(10, 10, 200, 200)
+    # c.generate_clouds()
+    # c.draw_border()
     c.save()
