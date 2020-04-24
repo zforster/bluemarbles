@@ -9,7 +9,6 @@ class Canvas:
     def __init__(self, width: int, height: int, border_thickness: int):
         self.image_width = width
         self.image_height = height
-
         self.border_thickness = border_thickness
 
         self.image = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.image_width, self.image_height)
@@ -33,6 +32,8 @@ class Canvas:
                              (255, 255, 255),
                              (255, 255, 255),
                              ]
+
+        self.planet_size = 500
 
         self.scale = 500.0
         self.octaves = 6
@@ -69,24 +70,44 @@ class Canvas:
                 draw_star = random.random()
                 if draw_star > 0.999:
                     star_col = random.choice(self.star_colours)
-                    # self.canvas.rectangle(width, height, 1, 1)
-                    star_size = random.choice([1, 1, 1, 1, 1, 2])
+                    star_size = random.choice([1, 1, 1, 1, 1, 1, 1, 2])
                     self.canvas.arc(width, height, star_size, 0, 2*math.pi)
                     self.canvas.set_source_rgba(star_col[0] / 255, star_col[1] / 255, star_col[2] / 255, random.random())
                     self.canvas.fill()
-                    # exit(1)
 
     def save(self):
         self.image.write_to_png('Examples/test.png')
 
-
-
-
+    def noise_test(self):
+        for width in range(0, self.image_width):
+            for height in range(0, self.image_height):
+                scale = 200.0
+                noise_val = noise.pnoise2(width/scale,
+                                          height/scale,
+                                          octaves=6,
+                                          persistence=0.4,
+                                          lacunarity=2.0,
+                                          repeatx=self.image_width,
+                                          repeaty=self.image_height,
+                                          base=0)
+                if noise_val < -0.05:
+                    self.canvas.set_source_rgba(8/255, 13/255, 59/255, 1)
+                    self.canvas.rectangle(width, height, 1, 1)
+                    self.canvas.fill()
+                elif noise_val < 0:
+                    self.canvas.set_source_rgba(241/255, 236/255, 187/255, 1)
+                    self.canvas.rectangle(width, height, 1, 1)
+                    self.canvas.fill()
+                elif noise_val < 1.0:
+                    self.canvas.set_source_rgba(54/255, 78/255, 44/255, 1)
+                    self.canvas.rectangle(width, height, 1, 1)
+                    self.canvas.fill()
 
 
 if __name__ == "__main__":
     c = Canvas(width=1100, height=1500, border_thickness=50)
     c.draw_background()
-    c.draw_stars()
+    # c.draw_stars()
+    c.noise_test()
     c.draw_border()
     c.save()
