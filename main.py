@@ -35,7 +35,7 @@ class Canvas:
 
         self.planet_size = 500
 
-        self.scale = 175.0
+        self.scale = 250.0
         self.octaves = 6
         self.persistence = .5
         self.lacunarity = 2.0
@@ -141,63 +141,67 @@ class Canvas:
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
                 #
+                elif noise_val < 0.105:
+                    self.canvas.set_source_rgba(236/255, 230/255, 200/255, 1)
+                    self.canvas.rectangle(width, height, 1, 1)
+                    self.canvas.fill()
                 elif noise_val < 0.123:
                     self.canvas.set_source_rgba(126/255, 123/255, 103/255, 1)
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
-                elif noise_val < 0.146:
+                elif noise_val < 0.135:
                     self.canvas.set_source_rgba(109/255, 113/255, 86/255, 1)
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
-                elif noise_val < 0.169:
+                elif noise_val < 0.145:
                     self.canvas.set_source_rgba(120/255, 123/255, 100/255, 1)
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
-                elif noise_val < 0.192:
+                elif noise_val < 0.15:
                     self.canvas.set_source_rgba(117/255, 132/255, 94/255, 1)
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
-                elif noise_val < 0.215:
+                elif noise_val < 0.17:
                     self.canvas.set_source_rgba(104/255, 115/255, 87/255, 1)
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
-                elif noise_val < 0.238:
+                elif noise_val < 0.2:
                     self.canvas.set_source_rgba(75/255, 94/255, 63/255, 1)
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
-                elif noise_val < 0.261:
+                elif noise_val < 0.231:
                     self.canvas.set_source_rgba(76/255, 97/255, 63/255, 1)
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
-                elif noise_val < 0.284:
+                elif noise_val < 0.26:
                     self.canvas.set_source_rgba(73/255, 93/255, 64/255, 1)
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
-                elif noise_val < 0.307:
+                elif noise_val < 0.28:
                     self.canvas.set_source_rgba(74/255, 94/255, 65/255, 1)
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
-                elif noise_val < 0.33:
+                elif noise_val < 0.3:
                     self.canvas.set_source_rgba(129/255, 129/255, 122/255, 1)
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
-                elif noise_val < 0.353:
+                elif noise_val < 0.32:
                     self.canvas.set_source_rgba(141/255, 137/255, 130/255, 1)
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
-                elif noise_val < 0.376:
+                elif noise_val < 0.34:
                     self.canvas.set_source_rgba(154/255, 150/255, 143/255, 1)
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
-                elif noise_val < 0.38:
+                elif noise_val < 0.35:
                     self.canvas.set_source_rgba(116/255, 112/255, 102/255, 1)
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
-                elif noise_val < 0.39:
+                elif noise_val < 0.37:
                     self.canvas.set_source_rgba(112/255, 114/255, 109/255, 1)
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
-                elif noise_val < 0.4:
+                elif noise_val < 0.38:
                     self.canvas.set_source_rgba(175/255, 176/255, 173/255, 1)
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
