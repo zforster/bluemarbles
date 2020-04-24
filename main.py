@@ -298,19 +298,10 @@ class Canvas:
                         self.canvas.set_source_rgba(150/255, 165/255, 174/255, 1)
                         self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
                         self.canvas.fill()
-                    elif noise_val > 0.696:
+                    elif noise_val > 0.697:
                         self.canvas.set_source_rgba(95/255, 157/255, 152/255, 1)
                         self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
                         self.canvas.fill()
-                    # elif noise_val > 0.68:
-                    #     self.canvas.set_source_rgba(44/255, 103/255, 128/255, 1)
-                    #     self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
-                    #     self.canvas.fill()
-                    # elif noise_val > 0.67:
-                    #     self.canvas.set_source_rgba(28/255, 68/255, 102/255, 1)
-                    #     self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
-                    #     self.canvas.fill()
-
 
     def generate_clouds(self):
         for width in range(0, self.image_width):
