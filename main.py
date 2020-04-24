@@ -9,9 +9,45 @@ class Canvas:
     def __init__(self, width: int, height: int, border_thickness: int):
         self.image_width = width
         self.image_height = height
+
         self.border_thickness = border_thickness
+
         self.image = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.image_width, self.image_height)
         self.canvas = cairo.Context(self.image)
+
+        # colours based on temp of real stars - https://qph.fs.quoracdn.net/main-qimg-f7d440db775a84d85a3f76b5822e9151
+        self.star_colours = [(204, 217, 252),
+                             (206, 215, 252),
+                             (249, 247, 252),
+                             (255, 253, 219),
+                             (253, 244, 173),
+                             (247, 211, 173),
+                             (238, 106, 93),
+                             (206, 216, 252),
+                             (239, 239, 239),
+                             (255, 255, 255),
+                             (255, 255, 255),
+                             (255, 255, 255),
+                             (255, 255, 255),
+                             (255, 255, 255),
+                             (255, 255, 255),
+                             (255, 255, 255),
+                             ]
+
+        self.scale = 500.0
+        self.octaves = 6
+        self.persistence = .5
+        self.lacunarity = 2.0
+        self.base = 0
+        self.max_distance = 900.0
+        self.planet_number_high = 1
+        self.planet_number_wide = 1
+        self.planet_size = 1500
+        self.border_thickness = 50
+        self.first = True
+
+        self.offset = random.randint(1, 100) * random.randint(1, 1000)
+        self.colors_list = [(127, 199, 175), (218, 216, 167), (167, 219, 216), (237, 118, 112)]
 
     def draw_border(self, r: int=255, g: int=255, b: int=255):
         self.canvas.set_source_rgb(r, g, b)
@@ -26,77 +62,31 @@ class Canvas:
         self.canvas.set_source_rgb(r, g, b)
         self.canvas.paint()
 
+    def draw_stars(self):
+        self.canvas.set_source_rgb(0, 0, 0)
+        for width in range(0, self.image_width):
+            for height in range(0, self.image_height):
+                draw_star = random.random()
+                if draw_star > 0.999:
+                    star_col = random.choice(self.star_colours)
+                    # self.canvas.rectangle(width, height, 1, 1)
+                    star_size = random.choice([1, 1, 1, 1, 1, 2])
+                    self.canvas.arc(width, height, star_size, 0, 2*math.pi)
+                    self.canvas.set_source_rgba(star_col[0] / 255, star_col[1] / 255, star_col[2] / 255, random.random())
+                    self.canvas.fill()
+                    # exit(1)
+
     def save(self):
         self.image.write_to_png('Examples/test.png')
 
 
 
 
-def main():
-
-    scale = 500.0
-    octaves = 6
-    persistence = .5
-    lacunarity = 2.0
-    base = 0
-    max_distance = 900.0
-    planet_number_high = 1
-    planet_number_wide = 1
-    planet_size = 1500
-    border_thickness = 50
-
-
-    draw_border(canvas=canvas, thickness=border_thickness, width=image_width, height=image_height)
-
-    image.write_to_png('Examples/test.png')
-
-
-    offset = random.randint(1, 100) * random.randint(1, 1000)
-
-
-    colors_list = [(127, 199, 175), (218, 216, 167), (167, 219, 216), (237, 118, 112)]
-
-    # for col in range(pil_image.size[0]):
-    #     for row in range(pil_image.size[1]):
-    #         pixels[col, row] = (208, 200, 176)
-
-    # for col in range(0, pil_image.size[0], planet_size):
-    #     for row in range(0, pil_image.size[1], planet_size):
-    #         color_water = random.choice(colors_list)
-    #         color_ground = random.choice(colors_list)
-    #         while color_ground is color_water:
-    #             color_ground = random.choice(colors_list)
-    #         other_color = random.choice(colors_list)
-    #         while other_color is color_water or other_color is color_ground:
-    #             other_color = random.choice(colors_list)
-    #         for i in range(col, col+planet_size):
-    #             for j in range(row, row+planet_size):
-    #
-    #                 # Generates a value from -1 to 1
-    #                 pixel_value = noise.pnoise2((offset+i)/scale,
-    #                                             (offset+j)/scale,
-    #                                             octaves,
-    #                                             persistence,
-    #                                             lacunarity,
-    #                                             width,
-    #                                             height,
-    #                                             base)
-    #                 distance_from_center = math.sqrt(math.pow((i - (col+(col+planet_size))/2), 2) + math.pow((j - (row+(row+planet_size))/2), 2))
-    #
-    #                 if (distance_from_center < max_distance):
-    #                     if (other_color == 1 and int(pixel_value * 100.0) > 25):
-    #                         pixels[i, j] = other_color
-    #                     elif (int(pixel_value * 100.0) > 5):
-    #                         pixels[i, j] = color_ground
-    #                     else:
-    #                         pixels[i, j] = color_water
-    #                 elif (distance_from_center < (max_distance + .03 * max_distance)):
-    #                     pixels[i, j] = (15, 15, 15)
-
 
 
 if __name__ == "__main__":
     c = Canvas(width=1100, height=1500, border_thickness=50)
     c.draw_background()
+    c.draw_stars()
     c.draw_border()
     c.save()
