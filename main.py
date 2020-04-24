@@ -81,7 +81,7 @@ class Canvas:
                 draw_star = random.random()
                 if draw_star > 0.999:
                     star_col = random.choice(self.star_colours)
-                    star_size = random.choice([1, 1, 1, 1, 1, 1, 1, 2])
+                    star_size = random.choice([1, 1, 1, 1, 1, 1, 1, 1])
                     self.canvas.arc(width, height, star_size, 0, 2*math.pi)
                     self.canvas.set_source_rgba(star_col[0] / 255, star_col[1] / 255, star_col[2] / 255, random.random())
                     self.canvas.fill()
@@ -309,17 +309,44 @@ class Canvas:
                 distance_from_center = math.sqrt(math.pow((width - self.image_width//2), 2) + math.pow((height - self.image_height//2), 2))
                 if distance_from_center < self.planet_radius_pix:
                     noise_val = self.generate_perlin_noise(x=width, y=height, scale=self.cloud_scale, offset=self.cloud_offset)
-                    self.canvas.set_source_rgba(255/255, 255/255, 255/255, noise_val*1.65)
+                    self.canvas.set_source_rgba(255/255, 255/255, 255/255, noise_val*1.85)
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
+
+    def render_atmosphere(self):
+        icewidth = ((self.planet_radius_pix + 200) * 2)
+        iceheight = ((self.planet_radius_pix + 200) * 2)
+        # planet_left_start = (self.image_width // 2) - icewidth // 2
+        # planet_right_end = (self.image_height // 2) - iceheight // 2
+
+        withoutoffestwidth = ((self.planet_radius_pix + 2) * 2)
+        withoutoffestheight = ((self.planet_radius_pix + 2) * 2)
+        planet_left_start = (self.image_width // 2) - withoutoffestwidth // 2
+        planet_right_end = (self.image_height // 2) - withoutoffestheight // 2
+
+        for x in range(0, icewidth):
+            for y in range(0, iceheight):
+                # good function
+                distance_from_center = math.sqrt(math.pow((x - withoutoffestwidth//2), 2) + math.pow((y - withoutoffestheight//2), 2))
+                if distance_from_center < withoutoffestwidth // 2:
+                    sin_x = math.sin((x / icewidth) * (math.pi))
+                    sin_y = math.sin((y / iceheight) * (math.pi))
+
+                    sin_val = (sin_y) * (sin_x)
+                    self.canvas.set_source_rgba(200/255, 200/255, 200/255, 1-sin_val)
+                    self.canvas.rectangle(x+planet_left_start, y+planet_right_end, 1, 1)
+                    self.canvas.fill()
+
+
 
 
 if __name__ == "__main__":
     c = Canvas(width=1500, height=1100, border_thickness=50)
     c.draw_background()
     c.draw_stars()
-    c.generate_terrain()
-    c.render_ice_caps(10, 10, 200, 200)
-    c.generate_clouds()
+    # c.generate_terrain()
+    # c.render_ice_caps(10, 10, 200, 200)
+    # c.generate_clouds()
+    c.render_atmosphere()
     c.draw_border()
     c.save()
