@@ -45,7 +45,7 @@ class Canvas:
         print(self.terrain_scale)
 
         # self.cloud_scale = random.randint(175, 320)
-        self.cloud_scale = random.randint(30, 200)
+        self.cloud_scale = random.randint(150, 200)
         # 175
         print(self.cloud_scale)
 
@@ -332,16 +332,56 @@ class Canvas:
                     self.canvas.rectangle(x+planet_left_start, y+planet_right_end, 1, 1)
                     self.canvas.fill()
 
+    def render_shadow(self):
+        icewidth = int((self.planet_radius_pix * 1.7) * 2)
+        iceheight = int((self.planet_radius_pix * 1.7) * 2)
+        screenx = (self.image_width // 2) - icewidth // 2
+        screeny = (self.image_height // 2) - iceheight // 2
+        for x in range(0, icewidth):
+            for y in range(0, iceheight):
+                # good function
+                distance_from_center = math.sqrt(math.pow((x - icewidth//2), 2) + math.pow((y - iceheight//2), 2))
+                # if distance_from_center < icewidth // 2:
+                if 1:
+                    sin_x = math.sin(((x / icewidth)) * (math.pi)) / 0.7
+                    sin_y = math.sin((y / iceheight) * (math.pi))
+
+                    sin_val = (sin_y) * (sin_x)
+                    sin_val = sin_val
+                    self.canvas.set_source_rgba(1, 0, 0, 1-sin_val)
+                    self.canvas.rectangle(x+(screenx/2), y+screeny, 1, 1)
+                    self.canvas.fill()
+
+    # def atmos_2(self):
+    #     icewidth = (self.planet_radius_pix * 2) * 2
+    #     iceheight = (self.planet_radius_pix * 2) * 2
+    #     screenx = (self.image_width // 2) - icewidth // 2
+    #     screeny = (self.image_height // 2) - iceheight // 2
+    #     for x in range(0, icewidth):
+    #         for y in range(0, iceheight):
+    #             # good function
+    #             distance_from_center = math.sqrt(math.pow((x - icewidth//2), 2) + math.pow((y - iceheight//2), 2))
+    #             # if distance_from_center < icewidth // 2:
+    #             if 1:
+    #                 sin_x = math.sin(((x / icewidth)) * (math.pi)) / 0.7
+    #                 sin_y = math.sin((y / iceheight) * (math.pi))
+    #
+    #                 sin_val = (sin_y) * (sin_x)
+    #                 self.canvas.set_source_rgba(200/255, 200/255, 200/255, sin_val)
+    #                 self.canvas.rectangle(x+screenx, y+screeny, 1, 1)
+    #                 self.canvas.fill()
+
 
 
 
 if __name__ == "__main__":
-    c = Canvas(width=1500, height=1100, border_thickness=50)
+    c = Canvas(width=1920, height=1080, border_thickness=50)
     c.draw_background()
-    c.draw_stars()
+    # c.draw_stars()
     c.generate_terrain()
-    c.render_ice_caps()
-    c.generate_clouds()
-    c.render_atmosphere()
-    c.draw_border()
+    # c.render_ice_caps()
+    # c.generate_clouds()
+    # c.render_atmosphere()
+    c.render_shadow()
+    # c.draw_border()
     c.save()
