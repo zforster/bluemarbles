@@ -38,13 +38,14 @@ class Canvas:
         # 250
         print(self.planet_radius_pix)
 
+        # self.terrain_scale = random.randint(75, 150)
         self.terrain_scale = random.randint(75, 1000)
 
         # 250
         print(self.terrain_scale)
 
-        self.cloud_scale = random.randint(175, 320)
-
+        # self.cloud_scale = random.randint(175, 320)
+        self.cloud_scale = random.randint(30, 200)
         # 175
         print(self.cloud_scale)
 
@@ -309,7 +310,7 @@ class Canvas:
                 distance_from_center = math.sqrt(math.pow((width - self.image_width//2), 2) + math.pow((height - self.image_height//2), 2))
                 if distance_from_center < self.planet_radius_pix:
                     noise_val = self.generate_perlin_noise(x=width, y=height, scale=self.cloud_scale, offset=self.cloud_offset)
-                    self.canvas.set_source_rgba(255/255, 255/255, 255/255, noise_val*4)
+                    self.canvas.set_source_rgba(255/255, 255/255, 255/255, noise_val*3.5)
                     self.canvas.rectangle(width, height, 1, 1)
                     self.canvas.fill()
 
@@ -318,13 +319,13 @@ class Canvas:
         iceheight = int((self.planet_radius_pix * 1.8) * 2)
         planet_left_start = (self.image_width // 2) - icewidth // 2
         planet_right_end = (self.image_height // 2) - iceheight // 2
-        atmosphere_thickness = 2
+        atmosphere_thickness = random.randint(0,10)
 
         for x in range(0, icewidth):
             for y in range(0, iceheight):
                 # good function
                 distance_from_center = math.sqrt(math.pow((x - icewidth//2), 2) + math.pow((y - iceheight//2), 2))
-                if distance_from_center < self.planet_radius_pix + 3:
+                if distance_from_center < self.planet_radius_pix + atmosphere_thickness:
                 # if 1:
                     sin_x = math.sin((x / icewidth) * (math.pi))
                     sin_y = math.sin((y / iceheight) * (math.pi))
