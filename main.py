@@ -10,6 +10,7 @@ class Canvas:
         self.image_height = height
         self.border_thickness = border_thickness
         self.generate_planet = generate_planet
+        self.atmos = random.randint(1, 6)
 
         self.image = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.image_width, self.image_height)
         self.canvas = cairo.Context(self.image)
@@ -38,8 +39,8 @@ class Canvas:
         # 250
         print(self.planet_radius_pix)
 
-        # self.terrain_scale = random.randint(75, 150)
-        self.terrain_scale = random.randint(75, 1000)
+        self.terrain_scale = random.randint(75, 150)
+        # self.terrain_scale = random.randint(75, 1000)
 
         # 250
         print(self.terrain_scale)
@@ -79,13 +80,15 @@ class Canvas:
         self.canvas.set_source_rgb(0, 0, 0)
         for width in range(0, self.image_width):
             for height in range(0, self.image_height):
-                draw_star = random.random()
-                if draw_star > 0.999:
-                    star_col = random.choice(self.star_colours)
-                    star_size = random.choice([1, 1, 1, 1, 1, 1, 1, 1])
-                    self.canvas.arc(width, height, star_size, 0, 2*math.pi)
-                    self.canvas.set_source_rgba(star_col[0] / 255, star_col[1] / 255, star_col[2] / 255, random.random())
-                    self.canvas.fill()
+                distance_from_center = math.sqrt(math.pow((width - self.image_width//2), 2) + math.pow((height - self.image_height//2), 2))
+                if distance_from_center > self.planet_radius_pix + self.atmos:  # 3 is the offset for the atmosphere
+                    draw_star = random.random()
+                    if draw_star > 0.999:
+                        star_col = random.choice(self.star_colours)
+                        star_size = random.choice([1, 1, 1, 1, 1, 1, 1, 1])
+                        self.canvas.arc(width, height, star_size, 0, 2*math.pi)
+                        self.canvas.set_source_rgba(star_col[0] / 255, star_col[1] / 255, star_col[2] / 255, random.random())
+                        self.canvas.fill()
 
     def save(self):
         self.image.write_to_png('examples/test.png')
@@ -318,13 +321,12 @@ class Canvas:
         iceheight = int((self.planet_radius_pix * 1.8) * 2)
         planet_left_start = (self.image_width // 2) - icewidth // 2
         planet_right_end = (self.image_height // 2) - iceheight // 2
-        atmosphere_thickness = random.randint(0,10)
 
         for x in range(0, icewidth):
             for y in range(0, iceheight):
                 # good function
                 distance_from_center = math.sqrt(math.pow((x - icewidth//2), 2) + math.pow((y - iceheight//2), 2))
-                if distance_from_center < self.planet_radius_pix + atmosphere_thickness:
+                if distance_from_center < self.planet_radius_pix + self.atmos:
                     sin_x = math.sin((x / icewidth) * (math.pi))
                     sin_y = math.sin((y / iceheight) * (math.pi))
                     sin_val = (sin_y) * (sin_x)
@@ -333,25 +335,21 @@ class Canvas:
                     self.canvas.fill()
 
     def render_shadow(self):
-        icewidth = int((self.planet_radius_pix * 1.7) * 2)
-        iceheight = int((self.planet_radius_pix * 1.7) * 2)
+        icewidth = int((self.planet_radius_pix * 1.8) * 2)
+        iceheight = int((self.planet_radius_pix * 1.8) * 2)
         screenx = (self.image_width // 2) - icewidth // 2
         screeny = (self.image_height // 2) - iceheight // 2
         for x in range(0, icewidth):
             for y in range(0, iceheight):
-                # good function
-                # distance_from_center = math.sqrt(math.pow((x - icewidth//2), 2) + math.pow((y - iceheight//2), 2))
-                # if distance_from_center < (self.planet_radius_pix * 2) // 2:
-                if 1:
-                    sin_x = math.sin(((x / icewidth)) * (math.pi)) / 0.7
-                    # sin_x = math.sin(((x / icewidth)) * (math.pi))
-                    sin_y = math.sin((y / iceheight) * (math.pi))
+                sin_x = math.sin(((x / icewidth)) * (math.pi)) / 0.5
+                # sin_x = math.sin(((x / icewidth)) * (math.pi))
+                sin_y = math.sin((y / iceheight) * (math.pi))
 
-                    sin_val = 1 - ((sin_y) * (sin_x))
-                    self.canvas.set_source_rgba(0, 0, 0, sin_val*7)
-                    # self.canvas.rectangle((x+screenx)-(icewidth/5), y+screeny, 1, 1)
-                    self.canvas.rectangle((x+screenx)+(icewidth/5), y+screeny, 1, 1)
-                    self.canvas.fill()
+                sin_val = 1 - ((sin_y) * (sin_x))
+                # sin_val = (sin_y) * (sin_x)
+                self.canvas.set_source_rgba(0, 0, 0, sin_val*7) # radomise blackness
+                self.canvas.rectangle((x+screenx)+(icewidth/5), y+screeny, 1, 1)
+                self.canvas.fill()
 
     # def atmos2(self):
     #     icewidth = int((self.planet_radius_pix * 1.7) * 2)
@@ -378,11 +376,18 @@ class Canvas:
 if __name__ == "__main__":
     c = Canvas(width=1920, height=1080, border_thickness=50)
     c.draw_background()
-    # c.draw_stars()
     c.generate_terrain()
     c.render_ice_caps()
     c.generate_clouds()
     c.render_atmosphere()
     c.render_shadow()
+    c.draw_stars()
     # c.draw_border()
     c.save()
+
+# todo
+# randomise the shadow direction
+# if scale > some size dont render ice cap
+# clean dutty code
+# randomise the blackness
+# replace atmosphere with atmos2 function as it niceley fades out
