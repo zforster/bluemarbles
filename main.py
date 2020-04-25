@@ -314,21 +314,16 @@ class Canvas:
                     self.canvas.fill()
 
     def render_atmosphere(self):
-        icewidth = ((self.planet_radius_pix + 200) * 2)
-        iceheight = ((self.planet_radius_pix + 200) * 2)
-        # planet_left_start = (self.image_width // 2) - icewidth // 2
-        # planet_right_end = (self.image_height // 2) - iceheight // 2
+        icewidth = ((self.planet_radius_pix * 2) * 2)
+        iceheight = ((self.planet_radius_pix * 2) * 2)
+        planet_left_start = (self.image_width // 2) - icewidth // 2
+        planet_right_end = (self.image_height // 2) - iceheight // 2
 
-        withoutoffestwidth = ((self.planet_radius_pix + 2) * 2)
-        withoutoffestheight = ((self.planet_radius_pix + 2) * 2)
-        planet_left_start = (self.image_width // 2) - withoutoffestwidth // 2
-        planet_right_end = (self.image_height // 2) - withoutoffestheight // 2
-
-        for x in range(0, icewidth):
-            for y in range(0, iceheight):
+        for x in range(0, self.image_width):
+            for y in range(0, self.image_height):
                 # good function
-                distance_from_center = math.sqrt(math.pow((x - withoutoffestwidth//2), 2) + math.pow((y - withoutoffestheight//2), 2))
-                if distance_from_center < withoutoffestwidth // 2:
+                distance_from_center = math.sqrt(math.pow((x - icewidth//2), 2) + math.pow((y - iceheight//2), 2))
+                if distance_from_center < ((self.planet_radius_pix + 3) * 2) // 2:
                     sin_x = math.sin((x / icewidth) * (math.pi))
                     sin_y = math.sin((y / iceheight) * (math.pi))
 
@@ -344,9 +339,9 @@ if __name__ == "__main__":
     c = Canvas(width=1500, height=1100, border_thickness=50)
     c.draw_background()
     c.draw_stars()
-    # c.generate_terrain()
-    # c.render_ice_caps(10, 10, 200, 200)
-    # c.generate_clouds()
+    c.generate_terrain()
+    c.render_ice_caps(10, 10, 200, 200)
+    c.generate_clouds()
     c.render_atmosphere()
     c.draw_border()
     c.save()
