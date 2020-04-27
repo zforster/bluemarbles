@@ -58,16 +58,31 @@ class ImageCanvas:
                     col = self.world.gen_clouds(x, y)
                     self.draw_pixel(planet_offset_x, planet_offset_y, 255, 255, 255, col)
 
+        # draw atmosphere (cant figure out how to put it in the single loop as sin waves need larger diameter)
         for x in range(0, self.world.atmosphere_diameter):
             for y in range(0, self.world.atmosphere_diameter):
                 if self.distance_from_image_center(x=x+self.world.atmosphere_start_x, y=y+self.world.atmosphere_start_y) < self.world.planet_radius + self.world.atmosphere_thickness:
-                    sin_x = math.sin((x / self.world.atmosphere_diameter) * math.pi)
-                    sin_y = math.sin((y / self.world.atmosphere_diameter) * math.pi)
-                    sin_val = sin_y * sin_x
-                    atmos_thickness = 1
-                    sin_val = sin_val / atmos_thickness
-                    self.draw_pixel(x+self.world.atmosphere_start_x, y+self.world.atmosphere_start_y, 200, 200, 200, 1-sin_val)
+                    sin_val = 1 - self.world.gen_atmosphere(x, y)
+                    self.draw_pixel(x+self.world.atmosphere_start_x,
+                                    y+self.world.atmosphere_start_y,
+                                    200, 200, 200,
+                                    sin_val)
 
+        for x in range(0, self.world.atmosphere_diameter):
+            for y in range(0, self.world.atmosphere_diameter):
+                sin_x = math.sin((x / self.world.atmosphere_diameter) * math.pi) / 0.5
+                sin_y = math.sin((y / self.world.atmosphere_diameter) * math.pi)
+                sin_val = 1 - (sin_y * sin_x)
+                # move right below
+                # self.draw_pixel((x-self.world.atmosphere_start_x)+(self.world.atmosphere_diameter / 5),
+                #                 y+self.world.atmosphere_start_y,
+                #                 255, 255, 255,
+                #                 sin_val * 7)
+                # move left
+                self.draw_pixel((x+self.world.atmosphere_start_x)+(self.world.atmosphere_diameter / 5),
+                                y+self.world.atmosphere_start_y,
+                                0, 0, 0,
+                                sin_val * 7)
 
     def distance_from_image_center(self, x: int, y: int):
         return math.sqrt(math.pow((x - self.image_width//2), 2) + math.pow((y - self.image_height//2), 2))

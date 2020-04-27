@@ -118,3 +118,11 @@ class WorldGen:
         noise_val = self.generate_perlin_noise(x=x, y=y, scale=self.cloud_scale)
         cloud_power = noise_val * 3
         return cloud_power
+
+    def gen_atmosphere(self, x, y):
+        sin_x = math.sin((x / self.atmosphere_diameter) * math.pi)
+        sin_y = math.sin((y / self.atmosphere_diameter) * math.pi)
+        sin_val = sin_y * sin_x
+        # atmos_thickness = 1
+        # sin_val = sin_val / atmos_thickness
+        return sin_val
