@@ -18,8 +18,13 @@ class WorldGen:
 
         self.planet_diameter = self.planet_radius * 2
 
+        self.atmosphere_diameter = int(self.planet_diameter * 1.8)
+
         self.planet_start_x = (self.image_width // 2) - self.planet_radius
         self.planet_start_y = (self.image_height // 2) - self.planet_radius
+
+        self.atmosphere_start_x = (self.image_width // 2) - (self.atmosphere_diameter // 2)
+        self.atmosphere_start_y = (self.image_height // 2) - (self.atmosphere_diameter // 2)
 
         self.atmosphere_thickness = random.randint(0, 10)
         self.terrain_scale = random.randint(75, 250)
@@ -95,20 +100,21 @@ class WorldGen:
 
         sin_val = sin_y * sin_x  # generate a gradient that resembles polar ice caps
 
-        # need to generate the noise to match the planet terrain
-        offset_to_terrainx = x+self.planet_diameter
-        offset_to_terrainy = y+self.planet_diameter
-
         ice_cap_power = 0.7  # increase to make lengthier caps, decrease to reduce
-        noise_val = self.generate_perlin_noise(x=offset_to_terrainx, y=offset_to_terrainy, scale=self.terrain_scale)
+        noise_val = self.generate_perlin_noise(x=x, y=y, scale=self.terrain_scale)
         noise_val = noise_val + ice_cap_power
 
         # multiply together to get noise that matches our pole gradients
         noise_val = sin_val * noise_val
 
-        chosen_key = 0.696
+        chosen_key = 0.689
         for key in self.noise_to_col_ice:
             if noise_val > chosen_key:
                 chosen_key = key
-        if chosen_key != 0.696:
+        if chosen_key != 0.689:
             return self.noise_to_col_ice[chosen_key]
+
+    def gen_clouds(self, x, y):
+        noise_val = self.generate_perlin_noise(x=x, y=y, scale=self.cloud_scale)
+        cloud_power = noise_val * 3
+        return cloud_power

@@ -39,22 +39,35 @@ class ImageCanvas:
         self.image.write_to_png('{}.png'.format(time.strftime("%d%m%Y-%H%M%S")))
 
     def render_loop(self):
-        #  draw terrain
-        for x in range(0, self.image_width):
-            for y in range(0, self.image_height):
-                if self.distance_from_image_center(x=x, y=y) < self.world.planet_radius:
-                    col = self.world.gen_terrain(x=x, y=y)
-                    self.draw_pixel(x, y, col[0], col[1], col[2], 1)
-
-        # draw ice
         for x in range(0, self.world.planet_diameter):
             for y in range(0, self.world.planet_diameter):
-                if self.distance_from_image_center(x+self.world.planet_start_x, y+self.world.planet_start_y) < self.world.planet_radius:
+                planet_offset_x = x + self.world.planet_start_x
+                planet_offset_y = y + self.world.planet_start_y
+
+                if self.distance_from_image_center(x=planet_offset_x, y=planet_offset_y) < self.world.planet_radius:
+                    #  draw terrain surface
+                    col = self.world.gen_terrain(x=x, y=y)
+                    self.draw_pixel(planet_offset_x, planet_offset_y, col[0], col[1], col[2], 1)
+
+                    #  draw ice caps
                     col = self.world.gen_ice_caps(x, y)
                     if col:  # only draw if we are given a colour for the poles
-                        self.draw_pixel(x+self.world.planet_start_x,
-                                        y+self.world.planet_start_y,
-                                        col[0], col[1], col[2], 1)
+                        self.draw_pixel(planet_offset_x, planet_offset_y, col[0], col[1], col[2], 1)
+
+                    #  draw clouds
+                    col = self.world.gen_clouds(x, y)
+                    self.draw_pixel(planet_offset_x, planet_offset_y, 255, 255, 255, col)
+
+        for x in range(0, self.world.atmosphere_diameter):
+            for y in range(0, self.world.atmosphere_diameter):
+                if self.distance_from_image_center(x=x+self.world.atmosphere_start_x, y=y+self.world.atmosphere_start_y) < self.world.planet_radius + self.world.atmosphere_thickness:
+                    sin_x = math.sin((x / self.world.atmosphere_diameter) * math.pi)
+                    sin_y = math.sin((y / self.world.atmosphere_diameter) * math.pi)
+                    sin_val = sin_y * sin_x
+                    atmos_thickness = 1
+                    sin_val = sin_val / atmos_thickness
+                    self.draw_pixel(x+self.world.atmosphere_start_x, y+self.world.atmosphere_start_y, 200, 200, 200, 1-sin_val)
+
 
     def distance_from_image_center(self, x: int, y: int):
         return math.sqrt(math.pow((x - self.image_width//2), 2) + math.pow((y - self.image_height//2), 2))
