@@ -123,8 +123,10 @@ class WorldGen:
             return self.noise_to_col_ice[chosen_key]
 
     def render_ice_caps(self, x, y):
-        thing = x / self.planet_radius
-        return math.sin(thing) * 255, math.sin(thing) * 255, math.sin(thing) * 255
+        sin_x = math.sin(x / self.planet_diameter)
+        sin_y = math.sin(y / self.planet_diameter)
+        sin_val = sin_x * sin_y
+        return sin_x * 255, sin_x * 255, sin_x * 255
         # icewidth = self.planet_radius * 2
         # iceheight = self.planet_radius * 2
         # screenx = (self.image_width // 2) - icewidth // 2

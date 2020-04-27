@@ -42,12 +42,27 @@ class ImageCanvas:
         for x in range(0, self.image_width):
             for y in range(0, self.image_height):
                 if self.distance_from_image_center(x=x, y=y) < self.world.planet_radius:
-                    # col = self.world.gen_terrain(x=x, y=y)
-                    # self.draw_pixel(x, y, col[0], col[1], col[2], 1)
+                    col = self.world.gen_terrain(x=x, y=y)
+                    self.draw_pixel(x, y, col[0], col[1], col[2], 1)
 
-                    ice = self.world.render_ice_caps(x=x, y=y)
-                    if ice:
-                        self.draw_pixel(x, y, ice[0], ice[1], ice[2], 1)
+        # draw a world sized box as we want to generate a sin wave that peaks in the middle of the planet
+        for x in range(0, self.world.planet_diameter):
+            for y in range(0, self.world.planet_diameter):
+                # if we are wi
+                # generate sin wave going from pos peak on one side to neg peak on other
+                sin_x = math.sin((x / self.world.planet_diameter) * math.pi)
+                # sin_x = math.sin(((x / icewidth)) * (math.pi))
+                sin_y = math.sin((y / self.world.planet_diameter) * math.pi)
+                sin_val = 1 - ((sin_y) * (sin_x))
+                # thing = sin_val * 255
+                # calculate offsets to planet otherwise we will be drawing from top left of screen
+                planet_start_x = (self.image_width // 2) - self.world.planet_radius
+                planet_start_y = (self.image_height // 2) - self.world.planet_radius
+                self.draw_pixel(x+planet_start_x, y+planet_start_y, sin_val, sin_val, sin_val, 1-sin_val)
+                # if self.distance_from_image_center(x=x, y=y) < self.world.planet_radius:
+                #     ice = self.world.render_ice_caps(x=x, y=y)
+                #     if ice:
+                #         self.draw_pixel(x, y, ice[0], ice[1], ice[2], 1)
 
     def distance_from_image_center(self, x: int, y: int):
         return math.sqrt(math.pow((x - self.image_width//2), 2) + math.pow((y - self.image_height//2), 2))
