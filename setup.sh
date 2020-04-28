@@ -12,6 +12,10 @@ source ./venv/bin/activate
 
 echo "Activated Python Virtual Env"
 
+echo "Upgrading Pip"
+
+pip install --upgrade pip
+
 echo "Installing Packages"
 
 pip install noise==1.2.2
