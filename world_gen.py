@@ -31,7 +31,7 @@ class WorldGen:
 
         self.octaves = 60  # level of detail in perlin noise
         self.persistence = .5  # keep below 1 or generate random noise
-        self.lacunarity = random.choice([2.0, 3.0, 4.0])  # higher for more granular terrain
+        self.lacunarity = random.choice([2.0, 3.0, 4.0])  # higher = more granular terrain (above 5 code breaks)
         self.offset = random.randint(1, 100) * random.randint(1, 1000)
         self.terrain_scale = random.randint(75, 250)  # generate random scale (higher = more zoomed out)
         self.cloud_scale = random.randint(150, 320)
