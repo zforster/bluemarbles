@@ -60,6 +60,26 @@ class WorldGen:
                                          0.38: (175, 176, 173),
                                          0.38000001: (255, 255, 255)}
 
+        self.noise_to_ice_age = {-0.3463: (8, 30, 75),
+                                 -0.34: (8, 34, 80),
+                                 -0.32: (9, 38, 84),
+                                 -0.3: (11, 42, 90),
+                                 -0.2: (11, 46, 92),
+                                 -0.1:  (11, 56, 99),
+                                 -0.07:  (11, 73, 99),
+                                 -0.05: (150, 165, 174),
+                                 0.00: (189, 195, 202),
+                                 0.01: (199, 210, 217),
+                                 0.05: (222, 231, 233),
+                                 0.07: (228, 237, 243),
+                                 0.09: (233, 241, 249),
+                                 0.11: (237, 245, 254),
+                                 0.13: (240, 249, 254),
+                                 0.14: (228, 237, 243),
+                                 0.19: (245, 253, 254),
+                                 0.21: (248, 254, 255),
+                                 0.23: (254, 254, 254)}
+
         self.noise_to_col_ice = {0.69: (95, 157, 152),
                                  0.7: (150, 165, 174),
                                  0.71: (189, 195, 202),
@@ -91,6 +111,14 @@ class WorldGen:
             if noise_val > chosen_key:
                 chosen_key = key
         return self.noise_to_col_map_terrain[chosen_key]
+
+    def gen_ice_age(self, x: int, y: int):
+        noise_val = self.generate_perlin_noise(x=x, y=y, scale=self.terrain_scale)
+        chosen_key = -99999
+        for key in self.noise_to_ice_age:
+            if noise_val > chosen_key:
+                chosen_key = key
+        return self.noise_to_ice_age[chosen_key]
 
     def gen_ice_caps(self, x, y):
         #  generate sin waves that pos peak in the middle of the planet

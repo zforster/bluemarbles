@@ -43,7 +43,7 @@ def render_atmosphere():
                 canvas.draw_pixel(x+world.atmosphere_start_x, y+world.atmosphere_start_y, 200, 200, 200, sin_val)
 
 
-def render_terrain_caps_clouds():
+def main_render_loop():
     for x in range(0, world.planet_diameter):
         for y in range(0, world.planet_diameter):
             planet_offset_x = x + world.planet_start_x
@@ -51,13 +51,20 @@ def render_terrain_caps_clouds():
 
             if canvas.distance_from_image_center(x=planet_offset_x, y=planet_offset_y) < world.planet_radius:
                 #  draw terrain surface
-                col = world.gen_terrain(x=x, y=y)
-                canvas.draw_pixel(planet_offset_x, planet_offset_y, col[0], col[1], col[2], 1)
 
-                # draw ice caps
-                col = world.gen_ice_caps(x, y)
-                if col:  # only draw if we are given a colour for the poles
+                if not ICE_AGE:
+                    col = world.gen_terrain(x=x, y=y)
                     canvas.draw_pixel(planet_offset_x, planet_offset_y, col[0], col[1], col[2], 1)
+
+                    # draw ice caps
+                    col = world.gen_ice_caps(x, y)
+                    if col:  # only draw if we are given a colour for the poles
+                        canvas.draw_pixel(planet_offset_x, planet_offset_y, col[0], col[1], col[2], 1)
+
+                if ICE_AGE:
+                    col = world.gen_ice_age(x, y)
+                    if col:  # only draw if we are given a colour for the poles
+                        canvas.draw_pixel(planet_offset_x, planet_offset_y, col[0], col[1], col[2], 1)
 
                 #  draw clouds
                 col = world.gen_clouds(x, y)
@@ -66,7 +73,7 @@ def render_terrain_caps_clouds():
 
 def render_and_save():
     canvas.fill_background()
-    render_terrain_caps_clouds()
+    main_render_loop()
     render_atmosphere()
     render_shadow()
     render_stars()
@@ -80,6 +87,7 @@ if __name__ == '__main__':
     HEIGHT = 1136
 
     DRAW_BORDER = True
+    ICE_AGE = True
 
     world = WorldGen(WIDTH, HEIGHT)
 
