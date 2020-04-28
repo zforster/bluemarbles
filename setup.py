@@ -6,6 +6,5 @@ setuptools.setup(
     description="Generate earth like worlds in the style of the famous 'blue marble' image",
     author="Zak Forster",
     author_email="zf31@kent.ac.uk",
-    packages=setuptools.find_packages(),
     install_requires=['noise==1.2.3', 'pycairo==1.19.1'],
 )
