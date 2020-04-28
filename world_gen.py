@@ -5,9 +5,14 @@ import noise
 
 class WorldGen:
     def __init__(self, width: int, height: int):
+        """
+        :param width: of the image in pixels
+        :param height: of the image in pixels
+        """
         self.image_width = width
         self.image_height = height
 
+        #  Ensure planet can't be larger than the image
         if self.image_height > self.image_width:
             half_width = self.image_width // 2
             self.planet_radius = random.randint(150, half_width - (half_width // 3))
@@ -16,22 +21,22 @@ class WorldGen:
             self.planet_radius = random.randint(150, half_height - (half_height // 3))
 
         self.planet_diameter = self.planet_radius * 2
-        self.planet_start_x = (self.image_width // 2) - self.planet_radius
-        self.planet_start_y = (self.image_height // 2) - self.planet_radius
+        self.planet_start_x = (self.image_width // 2) - self.planet_radius  # offset to start of planet on x axis
+        self.planet_start_y = (self.image_height // 2) - self.planet_radius  # offest to start of planet on y axis
 
-        self.atmosphere_diameter = int(self.planet_diameter * 1.8)
+        self.atmosphere_diameter = int(self.planet_diameter * 1.8)  # must be bigger to give visible atmosphere
         self.atmosphere_start_x = (self.image_width // 2) - (self.atmosphere_diameter // 2)
         self.atmosphere_start_y = (self.image_height // 2) - (self.atmosphere_diameter // 2)
-        self.atmosphere_thickness = random.randint(0, 3)
+        self.atmosphere_thickness = random.randint(0, 3)  # how much atmosphere is visible outside the earth
 
-        self.octaves = 6
-        self.persistence = .5
-        self.lacunarity = 2.0
-        self.base = 0
+        self.octaves = 60  # level of detail in perlin noise
+        self.persistence = .5  # keep below 1 or generate random noise
+        self.lacunarity = random.choice([2.0, 3.0, 4.0])  # higher for more granular terrain
         self.offset = random.randint(1, 100) * random.randint(1, 1000)
-        self.terrain_scale = random.randint(75, 250)
+        self.terrain_scale = random.randint(75, 250)  # generate random scale (higher = more zoomed out)
         self.cloud_scale = random.randint(150, 320)
 
+        #  given a noise value, extract the relevant colour to generate realistic looking terrain
         self.noise_to_col_map_terrain = {-0.263: (8, 30, 75),
                                          -0.197: (8, 34, 80),
                                          -0.164: (9, 38, 84),
@@ -96,15 +101,18 @@ class WorldGen:
     def generate_perlin_noise(self, x: int, y: int, scale: float):
         noise_val = noise.pnoise2((x+self.offset)/scale,
                                   (y+self.offset)/scale,
-                                  octaves=20,
-                                  persistence=0.5,
-                                  lacunarity=2,
+                                  octaves=self.octaves,
+                                  persistence=self.persistence,
+                                  lacunarity=self.lacunarity,
                                   repeatx=self.image_width,
                                   repeaty=self.image_height,
                                   base=0)
         return noise_val
 
     def gen_terrain(self, x: int, y: int):
+        """
+        Generate noise for the terrain and return relevant colour
+        """
         noise_val = self.generate_perlin_noise(x=x, y=y, scale=self.terrain_scale)
         chosen_key = -99999
         for key in self.noise_to_col_map_terrain:
@@ -113,6 +121,9 @@ class WorldGen:
         return self.noise_to_col_map_terrain[chosen_key]
 
     def gen_ice_age(self, x: int, y: int):
+        """
+        Generate noise for the ice age and return relevant colour
+        """
         noise_val = self.generate_perlin_noise(x=x, y=y, scale=self.terrain_scale)
         chosen_key = -99999
         for key in self.noise_to_ice_age:
@@ -121,6 +132,9 @@ class WorldGen:
         return self.noise_to_ice_age[chosen_key]
 
     def gen_ice_caps(self, x, y, strength):
+        """
+        Generate noise for the ice caps and return relevant colour
+        """
         #  generate sin waves that pos peak in the middle of the planet
         sin_x = math.sin((x / self.planet_diameter) * math.pi)  # vertical gradient
         sin_y = math.sin((y / self.planet_diameter) * math.pi)  # horizontal gradient
@@ -145,11 +159,18 @@ class WorldGen:
             return self.noise_to_col_ice[chosen_key]
 
     def gen_clouds(self, x, y, cloud_strength: int):
+        """
+        Generate noise for the clouds, return noise value
+        """
         noise_val = self.generate_perlin_noise(x=x, y=y, scale=self.cloud_scale)
         cloud_power = noise_val * cloud_strength
         return cloud_power
 
     def gen_atmosphere(self, x, y, strength):
+        """
+        Generate sin waves to generate a circle gradient over the atmosphere diameter
+        """
+        #  generate sin waves that pos peak in the middle of the atmosphere
         sin_x = math.sin((x / self.atmosphere_diameter) * math.pi)
         sin_y = math.sin((y / self.atmosphere_diameter) * math.pi)
         sin_val = sin_y * sin_x
@@ -157,6 +178,10 @@ class WorldGen:
         return sin_val
 
     def gen_shadow(self, x, y, strength):
+        """
+        Generate sin waves to generate a circle gradient over the atmosphere diameter
+        Minus 1 to invert the strength (set white to black for the shadow)
+        """
         sin_x = math.sin((x / self.atmosphere_diameter) * math.pi) / strength
         sin_y = math.sin((y / self.atmosphere_diameter) * math.pi)
         sin_val = 1 - (sin_y * sin_x)

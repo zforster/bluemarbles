@@ -5,6 +5,9 @@ import random
 
 
 def render_stars():
+    """
+    Draw stars on the image, but avoid the planet + the atmosphere of the planet
+    """
     for x in range(0, WIDTH):
         for y in range(0, HEIGHT):
             distance_from_center = math.sqrt(math.pow((x - WIDTH//2), 2) + math.pow((y - HEIGHT//2), 2))
@@ -13,7 +16,10 @@ def render_stars():
 
 
 def render_shadow():
-    # draw shadow, again cant move this inside the above loop as for some reason the atomosphere draws over the shadow
+    """
+    Render shadow over planet with probability of 0.66
+    If random number < 0.33 draw shadow on left side, otherwise draw it on the right side
+    """
     draw_shadow_decider = random.random()
     if draw_shadow_decider > 0.33:
         for x in range(0, world.atmosphere_diameter):
@@ -36,7 +42,9 @@ def render_shadow():
 
 
 def render_atmosphere():
-    # draw atmosphere (cant figure out how to put it in the single loop as sin waves need larger diameter)
+    """
+    Draw the atmosphere over the planet
+    """
     for x in range(0, world.atmosphere_diameter):
         for y in range(0, world.atmosphere_diameter):
             if canvas.distance_from_image_center(x=x+world.atmosphere_start_x, y=y+world.atmosphere_start_y) < world.planet_radius + world.atmosphere_thickness:
@@ -45,6 +53,10 @@ def render_atmosphere():
 
 
 def main_render_loop():
+    """
+    Main loop draws three things (terrain, ice-caps, clouds) to reduce run-time
+    If the user has chosen to generate an 'ice-age' earth, then skip drawing ice caps
+    """
     for x in range(0, world.planet_diameter):
         for y in range(0, world.planet_diameter):
             planet_offset_x = x + world.planet_start_x
@@ -73,6 +85,12 @@ def main_render_loop():
 
 
 def render_and_save():
+    """
+    Would be more efficient to move render_atmosphere, render_shadow and render_stars into the main render loop
+    but I can't figure out the maths as the atmosphere and shadow require larger radius for the sin waves
+
+    stars must be drawn last, otherwise the shadow will draw over the stars
+    """
     canvas.fill_background()
     main_render_loop()
     render_atmosphere()
@@ -87,19 +105,33 @@ if __name__ == '__main__':
     WIDTH = 640
     HEIGHT = 1136
 
-    DRAW_BORDER = True
+    """ User Options """
 
+    DRAW_BORDER = True  # set False if you don't want the white border around the image
+
+    """ 
+    set True to generate an 'ice-age' style earth
+    If True, normal earth terrain ice caps are not generated
+    'ICE_CAP_STRENGTH' does not refer to the this ice altering that will have no affect on the ice density here 
+    """
     ICE_AGE = False
 
-    CLOUD_STRENGTH = 3
+    CLOUD_STRENGTH = 3  # set lower to make clouds more transparent, set higher to make more opaque
 
+    """ 
+    setting higher generates longer ice caps, reducing generates smaller
+    Only useful if ICE_AGE is False (if generating a normal non-ice-age earth)
+    """
     ICE_CAP_STRENGTH = 0.7
 
-    ATMOSPHERE_STRENGTH = 1
+    ATMOSPHERE_STRENGTH = 1  # set higher to generate a thicker atmosphere covering the earth
 
-    SHADOW_SPAN = random.choice([0.4, 0.6])
+    """ End User Options """
+
+    SHADOW_SPAN = random.choice([0.4, 0.6])  # don't change these two values look realistic
 
     world = WorldGen(WIDTH, HEIGHT)
 
     canvas = ImageCanvas(WIDTH, HEIGHT)
+
     render_and_save()
