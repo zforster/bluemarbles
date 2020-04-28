@@ -20,7 +20,7 @@ def render_shadow():
             for y in range(0, world.atmosphere_diameter):
                 if canvas.distance_from_image_center(x=x+world.atmosphere_start_x,
                                                      y=y+world.atmosphere_start_y) < world.atmosphere_diameter:
-                    alpha = world.gen_shadow(x, y)
+                    alpha = world.gen_shadow(x, y, SHADOW_SPAN)
                     if draw_shadow_decider >= 0.66:
                         # draw on right side
                         canvas.draw_pixel((x+world.atmosphere_start_x)-(world.atmosphere_diameter / 5),
@@ -96,6 +96,8 @@ if __name__ == '__main__':
     ICE_CAP_STRENGTH = 0.7
 
     ATMOSPHERE_STRENGTH = 1
+
+    SHADOW_SPAN = random.choice([0.4, 0.6])
 
     world = WorldGen(WIDTH, HEIGHT)
 
