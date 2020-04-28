@@ -8,25 +8,27 @@ class WorldGen:
         self.image_width = width
         self.image_height = height
 
+        if self.image_height > self.image_width:
+            half_width = self.image_width // 2
+            self.planet_radius = random.randint(150, half_width - (half_width // 3))
+        else:
+            half_height = self.image_height // 2
+            self.planet_radius = random.randint(150, half_height - (half_height // 3))
+
+        self.planet_diameter = self.planet_radius * 2
+        self.planet_start_x = (self.image_width // 2) - self.planet_radius
+        self.planet_start_y = (self.image_height // 2) - self.planet_radius
+
+        self.atmosphere_diameter = int(self.planet_diameter * 1.8)
+        self.atmosphere_start_x = (self.image_width // 2) - (self.atmosphere_diameter // 2)
+        self.atmosphere_start_y = (self.image_height // 2) - (self.atmosphere_diameter // 2)
+        self.atmosphere_thickness = random.randint(0, 5)
+
         self.octaves = 6
         self.persistence = .5
         self.lacunarity = 2.0
         self.base = 0
         self.offset = random.randint(1, 100) * random.randint(1, 1000)
-
-        self.planet_radius = random.randint(150, 450)
-
-        self.planet_diameter = self.planet_radius * 2
-
-        self.atmosphere_diameter = int(self.planet_diameter * 1.8)
-
-        self.planet_start_x = (self.image_width // 2) - self.planet_radius
-        self.planet_start_y = (self.image_height // 2) - self.planet_radius
-
-        self.atmosphere_start_x = (self.image_width // 2) - (self.atmosphere_diameter // 2)
-        self.atmosphere_start_y = (self.image_height // 2) - (self.atmosphere_diameter // 2)
-
-        self.atmosphere_thickness = random.randint(0, 10)
         self.terrain_scale = random.randint(75, 250)
         self.cloud_scale = random.randint(150, 320)
 
@@ -132,4 +134,4 @@ class WorldGen:
         sin_y = math.sin((y / self.atmosphere_diameter) * math.pi)
         sin_val = 1 - (sin_y * sin_x)
         sin_val = sin_val
-        return sin_val
+        return sin_val * 7
