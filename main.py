@@ -114,7 +114,7 @@ if __name__ == '__main__':
     If True, normal earth terrain ice caps are not generated
     'ICE_CAP_STRENGTH' does not refer to the this ice altering that will have no affect on the ice density here 
     """
-    ICE_AGE = True
+    ICE_AGE = False
 
     CLOUD_STRENGTH = 3  # set lower to make clouds more transparent, set higher to make more opaque
 
