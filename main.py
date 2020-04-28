@@ -15,23 +15,24 @@ def render_stars():
 def render_shadow():
     # draw shadow, again cant move this inside the above loop as for some reason the atomosphere draws over the shadow
     draw_shadow_decider = random.random()
-    for x in range(0, world.atmosphere_diameter):
-        for y in range(0, world.atmosphere_diameter):
-            if canvas.distance_from_image_center(x=x+world.atmosphere_start_x,
-                                                 y=y+world.atmosphere_start_y) < world.atmosphere_diameter:
-                alpha = world.gen_shadow(x, y)
-                if draw_shadow_decider >= 0.5:
-                    # draw on right side
-                    canvas.draw_pixel((x+world.atmosphere_start_x)-(world.atmosphere_diameter / 5),
-                                      y+world.atmosphere_start_y,
-                                      0, 0, 0,
-                                      alpha)
-                else:
-                    # draw on left side
-                    canvas.draw_pixel((x+world.atmosphere_start_x)+(world.atmosphere_diameter / 5),
-                                      y+world.atmosphere_start_y,
-                                      0, 0, 0,
-                                      alpha)
+    if draw_shadow_decider > 0.33:
+        for x in range(0, world.atmosphere_diameter):
+            for y in range(0, world.atmosphere_diameter):
+                if canvas.distance_from_image_center(x=x+world.atmosphere_start_x,
+                                                     y=y+world.atmosphere_start_y) < world.atmosphere_diameter:
+                    alpha = world.gen_shadow(x, y)
+                    if draw_shadow_decider >= 0.66:
+                        # draw on right side
+                        canvas.draw_pixel((x+world.atmosphere_start_x)-(world.atmosphere_diameter / 5),
+                                          y+world.atmosphere_start_y,
+                                          0, 0, 0,
+                                          alpha)
+                    else:
+                        # draw on left side
+                        canvas.draw_pixel((x+world.atmosphere_start_x)+(world.atmosphere_diameter / 5),
+                                          y+world.atmosphere_start_y,
+                                          0, 0, 0,
+                                          alpha)
 
 
 def render_atmosphere():
@@ -39,7 +40,7 @@ def render_atmosphere():
     for x in range(0, world.atmosphere_diameter):
         for y in range(0, world.atmosphere_diameter):
             if canvas.distance_from_image_center(x=x+world.atmosphere_start_x, y=y+world.atmosphere_start_y) < world.planet_radius + world.atmosphere_thickness:
-                sin_val = 1 - world.gen_atmosphere(x, y)
+                sin_val = 1 - world.gen_atmosphere(x, y, ATMOSPHERE_STRENGTH)
                 canvas.draw_pixel(x+world.atmosphere_start_x, y+world.atmosphere_start_y, 200, 200, 200, sin_val)
 
 
@@ -57,7 +58,7 @@ def main_render_loop():
                     canvas.draw_pixel(planet_offset_x, planet_offset_y, col[0], col[1], col[2], 1)
 
                     # draw ice caps
-                    col = world.gen_ice_caps(x, y)
+                    col = world.gen_ice_caps(x, y, ICE_CAP_STRENGTH)
                     if col:  # only draw if we are given a colour for the poles
                         canvas.draw_pixel(planet_offset_x, planet_offset_y, col[0], col[1], col[2], 1)
 
@@ -67,7 +68,7 @@ def main_render_loop():
                         canvas.draw_pixel(planet_offset_x, planet_offset_y, col[0], col[1], col[2], 1)
 
                 #  draw clouds
-                col = world.gen_clouds(x, y)
+                col = world.gen_clouds(x, y, CLOUD_STRENGTH)
                 canvas.draw_pixel(planet_offset_x, planet_offset_y, 255, 255, 255, col)
 
 
@@ -87,7 +88,14 @@ if __name__ == '__main__':
     HEIGHT = 1136
 
     DRAW_BORDER = True
-    ICE_AGE = True
+
+    ICE_AGE = False
+
+    CLOUD_STRENGTH = 3
+
+    ICE_CAP_STRENGTH = 0.7
+
+    ATMOSPHERE_STRENGTH = 1
 
     world = WorldGen(WIDTH, HEIGHT)
 

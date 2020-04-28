@@ -22,7 +22,7 @@ class WorldGen:
         self.atmosphere_diameter = int(self.planet_diameter * 1.8)
         self.atmosphere_start_x = (self.image_width // 2) - (self.atmosphere_diameter // 2)
         self.atmosphere_start_y = (self.image_height // 2) - (self.atmosphere_diameter // 2)
-        self.atmosphere_thickness = random.randint(0, 5)
+        self.atmosphere_thickness = random.randint(0, 3)
 
         self.octaves = 6
         self.persistence = .5
@@ -120,7 +120,7 @@ class WorldGen:
                 chosen_key = key
         return self.noise_to_ice_age[chosen_key]
 
-    def gen_ice_caps(self, x, y):
+    def gen_ice_caps(self, x, y, strength):
         #  generate sin waves that pos peak in the middle of the planet
         sin_x = math.sin((x / self.planet_diameter) * math.pi)  # vertical gradient
         sin_y = math.sin((y / self.planet_diameter) * math.pi)  # horizontal gradient
@@ -130,7 +130,7 @@ class WorldGen:
 
         sin_val = sin_y * sin_x  # generate a gradient that resembles polar ice caps
 
-        ice_cap_power = 0.7  # increase to make lengthier caps, decrease to reduce
+        ice_cap_power = strength  # increase to make lengthier caps, decrease to reduce
         noise_val = self.generate_perlin_noise(x=x, y=y, scale=self.terrain_scale)
         noise_val = noise_val + ice_cap_power
 
@@ -144,17 +144,16 @@ class WorldGen:
         if chosen_key != 0.689:
             return self.noise_to_col_ice[chosen_key]
 
-    def gen_clouds(self, x, y):
+    def gen_clouds(self, x, y, cloud_strength: int):
         noise_val = self.generate_perlin_noise(x=x, y=y, scale=self.cloud_scale)
-        cloud_power = noise_val * 3
+        cloud_power = noise_val * cloud_strength
         return cloud_power
 
-    def gen_atmosphere(self, x, y):
+    def gen_atmosphere(self, x, y, strength):
         sin_x = math.sin((x / self.atmosphere_diameter) * math.pi)
         sin_y = math.sin((y / self.atmosphere_diameter) * math.pi)
         sin_val = sin_y * sin_x
-        # atmos_thickness = 1
-        # sin_val = sin_val / atmos_thickness
+        sin_val = sin_val / strength
         return sin_val
 
     def gen_shadow(self, x, y):
