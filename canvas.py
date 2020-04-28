@@ -1,6 +1,7 @@
 import cairo
 import math
 import time
+import random
 from world_gen import WorldGen
 
 
@@ -12,6 +13,24 @@ class ImageCanvas:
         self.canvas = cairo.Context(self.image)
         self.border_thickness = 50
         self.world = world
+
+        self.star_colours = [(204, 217, 252),
+                             (206, 215, 252),
+                             (249, 247, 252),
+                             (255, 253, 219),
+                             (253, 244, 173),
+                             (247, 211, 173),
+                             (238, 106, 93),
+                             (206, 216, 252),
+                             (239, 239, 239),
+                             (255, 255, 255),
+                             (255, 255, 255),
+                             (255, 255, 255),
+                             (255, 255, 255),
+                             (255, 255, 255),
+                             (255, 255, 255),
+                             (255, 255, 255),
+                             ]
 
     def set_colour(self, r: int, g: int, b: int, a: float=1):
         self.canvas.set_source_rgba(r/255, g/255, b/255, a)
@@ -34,6 +53,15 @@ class ImageCanvas:
         self.canvas.rectangle(0, border_bottom_start_x, self.image_width, self.border_thickness)  # bottom
         self.canvas.rectangle(0, 0, self.image_width, self.border_thickness)  # top
         self.canvas.fill()
+
+    def draw_star(self, x, y):
+        draw_star = random.random()
+        if draw_star > 0.999:
+            star_col = random.choice(self.star_colours)
+            star_size = 1
+            self.set_colour(star_col[0], star_col[1], star_col[2], random.random())
+            self.canvas.arc(x, y, star_size, 0, 2*math.pi)
+            self.canvas.fill()
 
     def save_image_png(self):
         self.image.write_to_png('{}.png'.format(time.strftime("%d%m%Y-%H%M%S")))
@@ -70,19 +98,18 @@ class ImageCanvas:
 
         for x in range(0, self.world.atmosphere_diameter):
             for y in range(0, self.world.atmosphere_diameter):
-                sin_x = math.sin((x / self.world.atmosphere_diameter) * math.pi) / 0.5
-                sin_y = math.sin((y / self.world.atmosphere_diameter) * math.pi)
-                sin_val = 1 - (sin_y * sin_x)
-                # move right below
-                # self.draw_pixel((x-self.world.atmosphere_start_x)+(self.world.atmosphere_diameter / 5),
-                #                 y+self.world.atmosphere_start_y,
-                #                 255, 255, 255,
-                #                 sin_val * 7)
-                # move left
-                self.draw_pixel((x+self.world.atmosphere_start_x)+(self.world.atmosphere_diameter / 5),
-                                y+self.world.atmosphere_start_y,
-                                0, 0, 0,
-                                sin_val * 7)
+                if self.distance_from_image_center(x=x+self.world.atmosphere_start_x, y=y+self.world.atmosphere_start_y) < self.world.atmosphere_diameter:
+                    alpha = self.world.gen_shadow(x, y)
+                    self.draw_pixel((x+self.world.atmosphere_start_x)+(self.world.atmosphere_diameter / 5),
+                                    y+self.world.atmosphere_start_y,
+                                    0, 0, 0,
+                                    alpha * 70)
+
+        for x in range(0, self.image_width):
+            for y in range(0, self.image_height):
+                distance_from_center = math.sqrt(math.pow((x - self.image_width//2), 2) + math.pow((y - self.image_height//2), 2))
+                if distance_from_center > self.world.planet_radius + self.world.atmosphere_thickness:  # 3 is the offset for the atmosphere
+                    self.draw_star(x, y)
 
     def distance_from_image_center(self, x: int, y: int):
         return math.sqrt(math.pow((x - self.image_width//2), 2) + math.pow((y - self.image_height//2), 2))
@@ -96,4 +123,5 @@ if __name__ == '__main__':
     canvas = ImageCanvas(WIDTH, HEIGHT, world=world)
     canvas.fill_background()
     canvas.render_loop()
+    canvas.draw_border()
     canvas.save_image_png()

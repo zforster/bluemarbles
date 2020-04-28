@@ -126,3 +126,10 @@ class WorldGen:
         # atmos_thickness = 1
         # sin_val = sin_val / atmos_thickness
         return sin_val
+
+    def gen_shadow(self, x, y):
+        sin_x = math.sin((x / self.atmosphere_diameter) * math.pi) / 0.5
+        sin_y = math.sin((y / self.atmosphere_diameter) * math.pi)
+        sin_val = 1 - (sin_y * sin_x)
+        sin_val = sin_val
+        return sin_val
