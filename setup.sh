@@ -14,6 +14,11 @@ echo "Activated Python Virtual Env"
 
 echo "Installing Packages"
 
-python setup.py install
+pip install noise==1.2.2
+pip install pycairo==1.19.1
+
+echo "Generating World"
 
 python3 main.py
+
+echo "Done!"
