@@ -48,7 +48,7 @@ def render_atmosphere():
     for x in range(0, world.atmosphere_diameter):
         for y in range(0, world.atmosphere_diameter):
             if canvas.distance_from_image_center(x=x+world.atmosphere_start_x, y=y+world.atmosphere_start_y) < world.planet_radius + world.atmosphere_thickness:
-                sin_val = 1 - world.gen_atmosphere(x, y, ATMOSPHERE_STRENGTH)
+                sin_val = world.gen_atmosphere(x, y, ATMOSPHERE_STRENGTH)
                 canvas.draw_pixel(x+world.atmosphere_start_x, y+world.atmosphere_start_y, 200, 200, 200, sin_val)
 
 

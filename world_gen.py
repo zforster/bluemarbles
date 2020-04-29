@@ -176,7 +176,7 @@ class WorldGen:
         sin_y = math.sin((y / self.atmosphere_diameter) * math.pi)
         sin_val = sin_y * sin_x
         sin_val = sin_val / strength
-        return sin_val
+        return 1 - sin_val
 
     def gen_shadow(self, x, y, strength):
         """
