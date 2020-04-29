@@ -70,11 +70,13 @@ To disable, alter main.py and set:
 DRAW_BORDER = False
 ``` 
 
+## Custom World Options
+
 There are a few options the user can tinker with to customise the generated world.
 
 #### Ice Age Mode 
 
-By default ice age mode is switched off. Enabling ice age mode will generate an earth like planet in the midst of an ice age, with normal terrain is replaced by snow and ice. 
+By default ice age mode is switched off. Enabling ice age mode will generate an earth like planet in the midst of an ice age, with normal terrain replaced by snow and ice. 
 
 To enable, alter main.py and set:
 ```
