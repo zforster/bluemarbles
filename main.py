@@ -116,15 +116,15 @@ if __name__ == '__main__':
     """
     ICE_AGE = False
 
-    CLOUD_STRENGTH = 3  # set lower to make clouds more transparent, set higher to make more opaque
+    CLOUD_STRENGTH = random.choice([1, 2, 3, 4])  # set lower to make clouds more transparent, set higher to make more opaque
 
     """ 
     setting higher generates longer ice caps, reducing generates smaller
     Only useful if ICE_AGE is False (if generating a normal non-ice-age earth)
     """
-    ICE_CAP_STRENGTH = 0.7
+    ICE_CAP_STRENGTH = random.choice([0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1])
 
-    ATMOSPHERE_STRENGTH = 1  # set higher to generate a thicker atmosphere covering the earth
+    ATMOSPHERE_STRENGTH = random.choice([1, 1, 1, 1, 1.1, 1.2, 1.3, 1.4])  # higher to generate a thicker atmosphere covering the earth
 
     """ End User Options """
 
