@@ -10,6 +10,17 @@ Each generated planet has its own unique landmass and ice caps, along with uniqu
 
 Shadows, simulating the dark side of the earth will appear over the planet with a chance of >= .66 percent. 
 
+## Examples
+
+### With Ice Age Mode Disabled 
+
+### With Ice Age Mode Enabled
+![](examples/ice_age/28042020-211132.png)
+![](examples/ice_age/28042020-211448.png)
+![](examples/ice_age/28042020-222936.png)
+![](examples/ice_age/28042020-223053.png)
+![](examples/ice_age/29042020-152040.png)
+![](examples/ice_age/29042020-152126.png)
 
 ## Running The Program
 
@@ -100,7 +111,7 @@ To make ice caps more prominent raise the ice cap strength to a static higher va
 To alter, edit main.py and set ICE_CAP_STRENGTH to your custom value.
 
 #### Atmosphere Thickness 
-Defaulted to between 1 and 1.6 (inclusive).
+Defaulted to between 1 and 1.4 (inclusive).
 
 To set a dense and thick atmosphere, set to static higher value like 2.
 
