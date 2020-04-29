@@ -34,7 +34,7 @@ class WorldGen:
         self.lacunarity = random.choice([2.0, 2.2, 2.4, 2.6, 2.8,
                                          3.0, 3.2, 3.4, 3.6, 3.8])  # higher = more granular terrain (above 5 code breaks)
         self.offset = random.randint(1, 100) * random.randint(1, 1000)
-        self.terrain_scale = random.randint(75, 250)  # generate random scale (higher = more zoomed out)
+        self.terrain_scale = random.randint(75, 500)  # generate random scale (higher = more zoomed out)
         self.cloud_scale = random.randint(150, 320)
 
         #  given a noise value, extract the relevant colour to generate realistic looking terrain
