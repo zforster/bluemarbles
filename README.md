@@ -12,7 +12,13 @@ Shadows, simulating the dark side of the earth will appear over the planet with 
 
 ## Examples
 
-### With Ice Age Mode Disabled 
+### With Ice Age Mode Disabled
+![](examples/normal/29042020-152326.png)
+![](examples/normal/29042020-152627.png)
+![](examples/normal/29042020-152841.png)
+![](examples/normal/29042020-152957.png)
+![](examples/normal/29042020-155126.png)
+![](examples/normal/29042020-155834.png)
 
 ### With Ice Age Mode Enabled
 ![](examples/ice_age/28042020-211132.png)
