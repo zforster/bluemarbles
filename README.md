@@ -83,16 +83,25 @@ ICE_AGE = True
 
 #### Cloud Opacity 
 
-Defaulted to 3.
+By default cloud opacity varies by random choice between 1, 2, 3 and 4. 
 
-To increase cloud opacity, alter main.py and set CLOUD_STRENGTH to a higher value than the default.
+To increase cloud opacity, alter main.py and set CLOUD_STRENGTH to a static higher value like 4.
 
-To reduce cloud visibility set lower. 
+To reduce cloud visibility set lower, something like 1 or 2. 
 
 #### Ice Cap Length 
 
-Defaulted to 0.7.
+Defaulted to between 0.3 and 1 (inclusive).
 
-To make ice caps more prominent raise the ice cap strength, to reduce, lower the value.
+To make ice caps more prominent raise the ice cap strength to a static higher value like 1, to reduce, lower the value to say 0.3.
 
 To alter, edit main.py and set ICE_CAP_STRENGTH to your custom value.
+
+#### Atmosphere Thickness 
+Defaulted to between 1 and 1.6 (inclusive).
+
+To set a dense and thick atmosphere, set to static higher value like 2.
+
+To set a thin atmosphere set to a low value like 0.5 or 1. 
+
+To alter, edit main.py and set ATMOSPHERE_STRENGTH to your custom value.
