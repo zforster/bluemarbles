@@ -1,89 +1,98 @@
 # 'Blue Marbles' - Earth Like World Generator 
 
-This project utilises Perlin noise to generate earth like worlds. In fact, the project makes use of two Perlin noise generators, one to generate the terrain and ice caps by assigning colours to different ranges simulating elevation, the other to generate cloud coverage. 
+This project utilises Perlin noise to generate unique earth like worlds of a random size, inspired by the famous 'Blue Marble' image taken on Apollo 17. [https://en.wikipedia.org/wiki/The_Blue_Marble]
 
-Inspired by the famous 'Blue Marble' image taken on Apollo 17 [https://en.wikipedia.org/wiki/The_Blue_Marble]
+In fact, the project makes use of two Perlin noise generators:
+ 1) To generate terrain and ice caps. Different noise values are assigned various colours to simulate elevation levels.
+ 2) To generate planet cloud coverage. 
+ 
+Each generated planet has its own unique landmass and ice caps, along with unique cloud coverage and atmosphere. 
 
-## Getting Started
+Shadows, simulating the dark side of the earth will appear over the planet with a chance of >= .66 percent. 
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+
+## Running The Program
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
-
+Language:
 ```
-Give examples
+Python 3.7 
+```
+
+Python Packages: 
+```
+noise
+pycairo
 ```
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
+I have included a 'setup.sh' bash script that sets up the environment and runs the program, outputting a timestamped png image. This will work if running on a Unix based OS. 
 
-Say what the step will be
+The script does the following:
+1) Creates a Python virtual environment
+2) Activates the environment
+3) Upgrades pip
+4) Installs required packages to the environment
+5) Runs the program, generating a world 
 
+To run clone this project, cd into the root of the cloned folder and run: 
 ```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
+sh setup.sh 
 ```
 
-### And coding style tests
+### Running After Installation 
 
-Explain what these tests test and why
+Activate the created virtual environment 
 
 ```
-Give an example
+source ./venv/bin/activate
 ```
 
-## Deployment
+Run the main file
 
-Add additional notes about how to deploy this on a live system
+```
+python main.py
+``` 
 
-## Built With
+## Custom Options
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+#### Custom Image Width & Height
+Alter main.py and set custom values for WIDTH and HEIGHT 
 
-## Contributing
+#### Switch Border On / Off
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+By default the image is drawn with a white border to frame the image. 
 
-## Versioning
+To disable, alter main.py and set:
+```
+DRAW_BORDER = False
+``` 
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+There are a few options the user can tinker with to customise the generated world.
 
-## Authors
+#### Ice Age Mode 
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+By default ice age mode is switched off. Enabling ice age mode will generate an earth like planet in the midst of an ice age, with normal terrain is replaced by snow and ice. 
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+To enable, alter main.py and set:
+```
+ICE_AGE = True
+``` 
 
-## License
+#### Cloud Opacity 
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+Defaulted to 3.
 
-## Acknowledgments
+To increase cloud opacity, alter main.py and set CLOUD_STRENGTH to a higher value than the default.
 
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+To reduce cloud visibility set lower. 
+
+#### Ice Cap Length 
+
+Defaulted to 0.7.
+
+To make ice caps more prominent raise the ice cap strength, to reduce, lower the value.
+
+To alter, edit main.py and set ICE_CAP_STRENGTH to your custom value.
